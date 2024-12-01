@@ -1,2 +1,2 @@
-# Configura-o-inicial-do-projeto-WordPress
+# Configuração-do-WordPress
 Projeto com  WordPress
