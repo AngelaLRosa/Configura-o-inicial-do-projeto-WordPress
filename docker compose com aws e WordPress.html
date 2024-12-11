@@ -88,16 +88,17 @@ aws configure
     <pre><code>
 services:
   wordpress:
-    image: wordpress:latest
+    image:  wordpress
+    restart:  always
     ports:
-      - "8080:80"
+      - 8080:80
     environment:
-      WORDPRESS_DB_HOST: your-rds-endpoint.amazonaws.com:3306
       WORDPRESS_DB_USER: wp_user
       WORDPRESS_DB_PASSWORD: wp_password
-      WORDPRESS_DB_NAME: wp_database
+      WORDPRESS_DB_NAME: wordpress-db
+      WORDPRESS_DB_HOST: wordpress-db.ctq4mmmgmide.us-east-1.rds.amazonaws.com
     volumes:
-      - wordpress_data:/var/www/html
+     - /efs/site:/var/www/html
 
 volumes:
   wordpress_data:
