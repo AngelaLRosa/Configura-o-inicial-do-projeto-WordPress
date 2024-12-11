@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instalação do Docker, Docker Compose e WordPress com AWS</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 20px;
+        }
+        pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        code {
+            color: #d63384;
+            font-weight: bold;
+        }
+        h1, h2 {
+            color: #0056b3;
+        }
+        a {
+            color: #d63384;
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Como Instalar Docker, Docker Compose e WordPress com AWS</h1>
+    <p>Este guia descreve as etapas para configurar Docker, Docker Compose e implementar WordPress integrado com AWS.</p>
+
+    <h2>1. Instalar Docker</h2>
+    <p>Execute os seguintes comandos para instalar o Docker em uma máquina Linux:</p>
+    <pre><code>
+# Atualize os pacotes
+sudo apt update
+
+# Instale os pacotes necessários
+sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+
+# Adicione o repositório do Docker
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Instale o Docker
+sudo apt update
+sudo apt install -y docker-ce docker-ce-cli containerd.io
+
+# Verifique a instalação
+docker --version
+    </code></pre>
+
+    <h2>2. Instalar Docker Compose</h2>
+    <p>Instale o Docker Compose usando o seguinte comando:</p>
+    <pre><code>
+# Baixe a versão mais recente do Docker Compose
+sudo curl -L "https://github.com/docker/compose/releases/download/$(curl -s https://api.github.com/repos/docker/compose/releases/latest | grep 'tag_name' | cut -d '"' -f 4)/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+# Dê permissão de execução
+sudo chmod +x /usr/local/bin/docker-compose
+
+# Verifique a instalação
+docker-compose --version
+    </code></pre>
+
+    <h2>3. Configurar AWS CLI</h2>
+    <p>Configure a AWS CLI para gerenciar recursos AWS:</p>
+    <pre><code>
+# Instale o AWS CLI
+sudo apt install -y awscli
+
+# Configure as credenciais
+aws configure
+    </code></pre>
+
+    <p>Insira suas credenciais da AWS ao executar <code>aws configure</code>.</p>
+
+    <h2>4. Configurar WordPress com Docker Compose</h2>
+    <p>Crie um arquivo <code>docker-compose.yml</code> com o seguinte conteúdo:</p>
+    <pre><code>
+version: '3.8'
+
+services:
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: your-rds-endpoint.amazonaws.com:3306
+      WORDPRESS_DB_USER: wp_user
+      WORDPRESS_DB_PASSWORD: wp_password
+      WORDPRESS_DB_NAME: wp_database
+    volumes:
+      - wordpress_data:/var/www/html
+
+volumes:
+  wordpress_data:
+    driver: local
+    </code></pre>
+
+    <h2>5. Criar Banco de Dados no AWS RDS</h2>
+    <p>Siga os passos abaixo para criar um banco de dados no Amazon RDS:</p>
+    <ol>
+        <li>Acesse o <a href="https://aws.amazon.com/rds/" target="_blank">console AWS RDS</a>.</li>
+        <li>Crie uma instância MySQL e configure as credenciais.</li>
+        <li>Anote o endpoint do RDS e substitua em <code>WORDPRESS_DB_HOST</code>.</li>
+    </ol>
+
+    <h2>6. Iniciar o Ambiente</h2>
+    <p>Suba o ambiente WordPress com o comando:</p>
+    <pre><code>
+docker-compose up -d
+    </code></pre>
+
+    <h2>7. Acesse o WordPress</h2>
+    <p>Acesse o WordPress no navegador através de <code>http://<seu-ip>:8080</code>.</p>
+
+    <h2>Extras</h2>
+    <ul>
+        <li>Para HTTPS, configure o AWS ACM (Certificate Manager).</li>
+        <li>Para armazenamento de mídia, use o AWS S3.</li>
+    </ul>
+</body>
+</html>
