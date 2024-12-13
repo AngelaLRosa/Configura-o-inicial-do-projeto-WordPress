@@ -93,10 +93,10 @@ services:
     ports:
       - 8080:80
     environment:
-      WORDPRESS_DB_USER: wp_user
+      WORDPRESS_DB_USER: angela
       WORDPRESS_DB_PASSWORD: wp_password
-      WORDPRESS_DB_NAME: wordpress-db
-      WORDPRESS_DB_HOST: wordpress-db.ctq4mmmgmide.us-east-1.rds.amazonaws.com
+      WORDPRESS_DB_NAME: wordpress1_db
+      WORDPRESS_DB_HOST: wordpress1_db.ctq4mmmgmide.us-east-1.rds.amazonaws.com
     volumes:
      - /efs/site:/var/www/html
 
